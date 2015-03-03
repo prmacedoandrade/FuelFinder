@@ -1,6 +1,7 @@
 package br.com.fuelfinder.model;
 
 /**
+
  * Classe representa um veiculo
  */
 public class Veiculo {
