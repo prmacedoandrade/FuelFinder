@@ -1,8 +1,12 @@
 package br.com.fuelfinder;
 
 import android.app.AlertDialog;
+import android.app.ListActivity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -12,17 +16,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+
+import br.com.fuelfinder.db.FuelFinderContract;
+import br.com.fuelfinder.db.FuelFinderDBHelper;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    private ListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        updateUI();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,13 +93,30 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Log.d("MainActivity", inputMarca.getText().toString());
+
+
+                    FuelFinderDBHelper helper = new FuelFinderDBHelper(MainActivity.this);
+                    SQLiteDatabase db = helper.getWritableDatabase();
+                    ContentValues values = new ContentValues();
+
+                    values.clear();
+                    values.put(FuelFinderContract.Vehicle.KEY_LICENSE, "TESTE");
+                    values.put(FuelFinderContract.Vehicle.KEY_MODEL, "TESTE1");
+                    values.put(FuelFinderContract.Vehicle.KEY_ODOMETER, 123);
+                    values.put(FuelFinderContract.Vehicle.KEY_TANK, 12);
+
+
+                    db.insertWithOnConflict(FuelFinderContract.Vehicle.TABLE_VEHICLE,null,values,
+                            SQLiteDatabase.CONFLICT_IGNORE);
+
+
                 }
 
             });
 
             builder.setNegativeButton("Cancel", null);
             builder.create().show();
-
+            updateUI();
 
             return true;
         }
@@ -99,4 +128,38 @@ public class MainActivity extends ActionBarActivity {
     protected void onStop() {
         super.onStop();
     }
+
+    private void updateUI(){
+
+        SQLiteDatabase sqlDB = new FuelFinderDBHelper(this).getWritableDatabase();
+        Cursor cursor = sqlDB.query(FuelFinderContract.Vehicle.TABLE_VEHICLE, new String[]{FuelFinderContract.Vehicle._ID,FuelFinderContract.Vehicle.KEY_LICENSE},
+                null,null,null,null,null);
+
+        cursor.moveToFirst();
+
+        while(cursor.moveToNext()) {
+            Log.d("MainActivity cursor",
+                    cursor.getString(
+                            cursor.getColumnIndexOrThrow(
+                                    FuelFinderContract.Vehicle.KEY_LICENSE)));
+        }
+
+        ListView listView = (ListView) findViewById(R.id.list);
+
+        listAdapter = new SimpleCursorAdapter(
+                this,
+                R.layout.lista_veiculos,
+                cursor,
+                new String[]{FuelFinderContract.Vehicle.KEY_LICENSE},
+                new int[]{R.id.taskTextView},
+                0
+        );
+
+        listView.setAdapter(listAdapter);
+
+        //this.setListAdapter(listAdapter);
+
+    }
+
 }
+
