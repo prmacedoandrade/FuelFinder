@@ -1,21 +1,40 @@
 package br.com.fuelfinder;
 
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class AddFuelActivity extends ActionBarActivity {
+public class AddFuelActivity extends ActionBarActivity implements LocationListener {
+
+    private Location mLoc;
+    private GoogleMap mMap;
+    private TextView txtLoc;
+    private LocationManager locManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_fuel);
-    }
 
+        locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        mMap = ((AddFuelMapFragment) getFragmentManager().findFragmentById(R.id.map))
+                .getMap();
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -47,5 +66,51 @@ public class AddFuelActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        if (location != null) {
+            String loc = "Lat:" + location.getLatitude() + "\n Long:"
+                    + location.getLongitude();
+            //txtLoc.setText(loc);
+            mLoc = location;
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 16));
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(location.getLatitude(), location.getLongitude()))
+                    .title("Localização Atual"));
+
+        }
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    // NÃO FUNCIONA
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,	1000 * 10, 1, this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locManager.removeUpdates(this);
+    }
+
 
 }
