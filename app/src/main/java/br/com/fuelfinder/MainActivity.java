@@ -5,29 +5,38 @@ import android.app.ListActivity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import br.com.fuelfinder.db.FuelFinderContract;
 import br.com.fuelfinder.db.FuelFinderDBHelper;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements LocationListener {
 
     private ListAdapter listAdapter;
+    private LocationManager locManager;
+    private boolean achouLocalizacao = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +60,7 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_add_task) {
+        if (id == R.id.action_add_vehicle) {
 
             LinearLayout layout = new LinearLayout(this);
             layout.setOrientation(LinearLayout.VERTICAL);
@@ -87,7 +96,6 @@ public class MainActivity extends ActionBarActivity {
 
             builder.setView(layout);
 
-
             builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
 
                 @Override
@@ -100,15 +108,15 @@ public class MainActivity extends ActionBarActivity {
                     ContentValues values = new ContentValues();
 
                     values.clear();
-                    values.put(FuelFinderContract.Vehicle.KEY_LICENSE, "TESTE");
-                    values.put(FuelFinderContract.Vehicle.KEY_MODEL, "TESTE1");
-                    values.put(FuelFinderContract.Vehicle.KEY_ODOMETER, 123);
-                    values.put(FuelFinderContract.Vehicle.KEY_TANK, 12);
-
+                    values.put(FuelFinderContract.Vehicle.KEY_LICENSE, inputPlaca.getText().toString());
+                    values.put(FuelFinderContract.Vehicle.KEY_MODEL, inputModelo.getText().toString());
+                    values.put(FuelFinderContract.Vehicle.KEY_ODOMETER, 0);
+                    values.put(FuelFinderContract.Vehicle.KEY_TANK, Integer.valueOf(inputVolume.getText().toString()));
 
                     db.insertWithOnConflict(FuelFinderContract.Vehicle.TABLE_VEHICLE,null,values,
                             SQLiteDatabase.CONFLICT_IGNORE);
 
+                    updateUI();
 
                 }
 
@@ -116,7 +124,7 @@ public class MainActivity extends ActionBarActivity {
 
             builder.setNegativeButton("Cancel", null);
             builder.create().show();
-            updateUI();
+
 
             return true;
         }
@@ -157,7 +165,70 @@ public class MainActivity extends ActionBarActivity {
 
         listView.setAdapter(listAdapter);
 
-        //this.setListAdapter(listAdapter);
+    }
+
+    public void onGasButtonClick(View view) {
+
+        Intent i = new Intent(MainActivity.this, AddFuelActivity.class);
+        startActivity(i);
+        //finish();
+
+        /*
+        View v = (View) view.getParent();
+
+        locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        // 1000 = 1 segundo
+        // 1 = acada um metro avisa
+        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,1, this);
+
+         if(!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            Toast t = Toast.makeText(getBaseContext(), "GPS Desativado", Toast.LENGTH_SHORT);
+            t.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
+            t.show();
+        }else if(!achouLocalizacao){
+            Toast t = Toast.makeText(getBaseContext(), "Aguarde GPS encontrar posição atual", Toast.LENGTH_SHORT);
+            t.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
+            t.show();
+        }else{
+            // manda msg para professor
+             Toast t = Toast.makeText(getBaseContext(), "Posição encontrada", Toast.LENGTH_SHORT);
+
+             Intent i = new Intent(MainActivity.this, AddFuelActivity.class);
+             startActivity(i);
+             finish();
+
+             //Intent i = new Intent(MainActivity.this, GPSActivity.class);
+            //startActivity(i);
+            //finish();
+        }
+        */
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        if (location != null) {
+            achouLocalizacao = true;
+        }
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
 
     }
 

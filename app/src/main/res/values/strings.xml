@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">FuelFinder</string>
+    <string name="app_name">Fuel Finder</string>
+
+    <!-- ACTIVITY ADD FUEL -->
+    <string name="action_add_fuel">Adicionar Combustível</string>
+    <string name="action_find_fuel">Procurar Combustível</string>
+
+    <!-- ACTIVITY MAIN (ADD VEHICLE) -->
+    <string name="action_add_vehicle">Adicionar Veículo</string>
+    <string name="title_activity_add_fuel">Combustível</string>
+    <string name="title_activity_activity_add_fuel_map">activity_add_fuel_map</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
