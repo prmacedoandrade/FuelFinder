@@ -19,20 +19,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class AddFuelActivity extends ActionBarActivity implements LocationListener {
 
-    private Location mLoc;
-    private GoogleMap mMap;
-    private TextView txtLoc;
-    private LocationManager locManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_fuel);
-
-        locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mMap = ((AddFuelMapFragment) getFragmentManager().findFragmentById(R.id.map))
-                .getMap();
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
     }
 
@@ -70,17 +60,7 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
     @Override
     public void onLocationChanged(Location location) {
 
-        if (location != null) {
-            String loc = "Lat:" + location.getLatitude() + "\n Long:"
-                    + location.getLongitude();
-            //txtLoc.setText(loc);
-            mLoc = location;
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 16));
-            mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(location.getLatitude(), location.getLongitude()))
-                    .title("Localização Atual"));
 
-        }
 
     }
 
@@ -103,13 +83,13 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
     @Override
     protected void onResume() {
         super.onResume();
-        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,	1000 * 10, 1, this);
+        //locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,	1000 * 10, 1, this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        locManager.removeUpdates(this);
+        //locManager.removeUpdates(this);
     }
 
 
