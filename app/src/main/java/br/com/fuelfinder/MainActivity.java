@@ -205,6 +205,24 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
     }
 
+    public void onDeleteButtonClick(View view) {
+
+        View v = (View) view.getParent();
+        TextView taskTextView = (TextView) v.findViewById(R.id.taskTextView);
+        String placa = taskTextView.getText().toString();
+
+        String sql = String.format("DELETE FROM %s WHERE %s = '%s'",
+               FuelFinderContract.Vehicle.TABLE_VEHICLE,
+               FuelFinderContract.Vehicle.KEY_LICENSE,
+               placa);
+
+        FuelFinderDBHelper helper = new FuelFinderDBHelper(MainActivity.this);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        db.execSQL(sql);
+        updateUI();
+    }
+
     @Override
     public void onLocationChanged(Location location) {
 

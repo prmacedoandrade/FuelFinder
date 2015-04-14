@@ -39,7 +39,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="" />
+            android:value="AIzaSyBiQjh_0TFv6PCgg3t1a1H6t5Z0urLc2EY" />
 
         <activity
             android:name=".AddFuelActivity"

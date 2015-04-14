@@ -21,9 +21,17 @@
         android:layout_height="wrap_content"
         android:text="GAS"
         android:id="@+id/doneButton"
+        android:onClick="onGasButtonClick"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="onGasButtonClick"/>
+        android:layout_toStartOf="@+id/deleteButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="APAGAR"
+        android:id="@+id/deleteButton"
+        android:onClick="onDeleteButtonClick"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
