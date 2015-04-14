@@ -28,6 +28,15 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
 import br.com.fuelfinder.db.FuelFinderContract;
 import br.com.fuelfinder.db.FuelFinderDBHelper;
 
@@ -37,12 +46,39 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
     private ListAdapter listAdapter;
     private LocationManager locManager;
     private boolean achouLocalizacao = false;
+    CallbackManager callbackManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_main);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                    }
+                });
+
         updateUI();
+
     }
 
     @Override
@@ -135,6 +171,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
     @Override
     protected void onStop() {
         super.onStop();
+        AppEventsLogger.deactivateApp(this);
     }
 
     private void updateUI(){
@@ -224,6 +261,12 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        AppEventsLogger.deactivateApp(this);
+    }
+
+    @Override
     public void onLocationChanged(Location location) {
 
         if (location != null) {
@@ -248,6 +291,12 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
     public void onStatusChanged(String provider, int status, Bundle extras) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
 }
