@@ -1,11 +1,13 @@
 package br.com.fuelfinder;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -15,9 +17,10 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends Activity {
 
     private CallbackManager callbackManager;
+    private static String idUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +38,9 @@ public class LoginActivity extends ActionBarActivity {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                        idUser = AccessToken.getCurrentAccessToken().getUserId();
                         startActivity(i);
                         finish();
-
-                        // App code
                     }
 
                     @Override
@@ -50,34 +52,16 @@ public class LoginActivity extends ActionBarActivity {
                     public void onError(FacebookException exception) {
                         // App code
                     }
+
                 });
 
 
-
-
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if(AccessToken.getCurrentAccessToken()!=null){
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(i);
+            finish();
         }
 
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -86,4 +70,11 @@ public class LoginActivity extends ActionBarActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    public static String getIdUser() {
+        return idUser;
+    }
+
+    public static void setIdUser(String idUser) {
+        LoginActivity.idUser = idUser;
+    }
 }

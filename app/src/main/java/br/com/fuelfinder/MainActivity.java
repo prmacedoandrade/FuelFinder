@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
@@ -23,7 +24,10 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.fitness.result.SessionReadResult;
 
 import br.com.fuelfinder.db.FuelFinderContract;
 import br.com.fuelfinder.db.FuelFinderDBHelper;
@@ -57,7 +61,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        // ADICIONAR VEICULO
         if (id == R.id.action_add_vehicle) {
 
             LinearLayout layout = new LinearLayout(this);
@@ -108,6 +112,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
                     values.clear();
                     values.put(FuelFinderContract.Vehicle.KEY_LICENSE, inputPlaca.getText().toString());
                     values.put(FuelFinderContract.Vehicle.KEY_MODEL, inputModelo.getText().toString());
+                    values.put(FuelFinderContract.Vehicle.ID_USER, LoginActivity.getIdUser());
                     values.put(FuelFinderContract.Vehicle.KEY_ODOMETER, 0);
                     values.put(FuelFinderContract.Vehicle.KEY_TANK, Integer.valueOf(inputVolume.getText().toString()));
 
@@ -123,8 +128,16 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
             builder.setNegativeButton("Cancel", null);
             builder.create().show();
 
-
             return true;
+        }
+
+        // LOGOUT FACEBOOK
+        if (id == R.id.action_log_out) {
+            LoginManager.getInstance().logOut();
+            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+            LoginActivity.setIdUser(new String());
+            startActivity(i);
+            this.finish();
         }
 
         return super.onOptionsItemSelected(item);
