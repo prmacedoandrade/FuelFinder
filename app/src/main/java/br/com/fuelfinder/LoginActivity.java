@@ -24,6 +24,8 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
 
         FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -61,6 +63,8 @@ public class LoginActivity extends Activity {
             startActivity(i);
             finish();
         }
+
+
 
     }
 

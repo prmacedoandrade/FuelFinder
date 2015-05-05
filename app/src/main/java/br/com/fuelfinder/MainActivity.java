@@ -114,6 +114,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
                     values.put(FuelFinderContract.Vehicle.KEY_MODEL, inputModelo.getText().toString());
                     values.put(FuelFinderContract.Vehicle.ID_USER, LoginActivity.getIdUser());
                     values.put(FuelFinderContract.Vehicle.KEY_ODOMETER, 0);
+                    values.put(FuelFinderContract.Vehicle.KEY_SYNC, Boolean.FALSE);
                     values.put(FuelFinderContract.Vehicle.KEY_TANK, Integer.valueOf(inputVolume.getText().toString()));
 
                     db.insertWithOnConflict(FuelFinderContract.Vehicle.TABLE_VEHICLE,null,values,

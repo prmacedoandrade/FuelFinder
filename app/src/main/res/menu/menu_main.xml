@@ -4,5 +4,10 @@
     <item android:id="@+id/action_add_vehicle"
         app:showAsAction="always"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="Add task"/>
+        android:title="@string/action_add_vehicle"/>
+    <item android:id="@+id/action_log_out"
+        app:showAsAction="always"
+        android:icon="@drawable/fb_logout_2"
+        android:title="@string/action_add_vehicle"/>
+
 </menu>

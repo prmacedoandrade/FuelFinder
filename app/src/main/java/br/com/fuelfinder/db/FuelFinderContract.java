@@ -21,14 +21,18 @@ public final class FuelFinderContract {
         public static final String KEY_MODEL = "model";
         public static final String KEY_ODOMETER = "odometer";
         public static final String KEY_TANK = "tank";
+        public static final String ID_USER = "id_user";
+        public static final String KEY_SYNC = "sync";
         public static final String _ID = BaseColumns._ID;
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_VEHICLE + " ("
                 + " _id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_LICENSE + " TEXT,"
+                + ID_USER + " TEXT,"
                 + KEY_MODEL + " TEXT,"
                 + KEY_ODOMETER + " INTEGER,"
-                + KEY_TANK + " INTEGER"
+                + KEY_TANK + " INTEGER,"
+                + KEY_SYNC + " BOOLEAN"
                 + ");";
 
     }
