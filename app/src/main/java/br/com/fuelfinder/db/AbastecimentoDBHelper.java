@@ -8,22 +8,20 @@ import android.util.Log;
 /**
  * Created by Paulo on 05/03/2015.
  */
-public class FuelFinderDBHelper extends SQLiteOpenHelper {
+public class AbastecimentoDBHelper extends SQLiteOpenHelper {
 
-    public FuelFinderDBHelper(Context context) {
-        super(context, FuelFinderContract.Vehicle.TABLE_VEHICLE, null, FuelFinderContract.DB_VERSION);
+    public AbastecimentoDBHelper(Context context) {
+        super(context, FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO, null, FuelFinderContract.DB_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d("FuelFinderDBHelper", "Query to form table: " + FuelFinderContract.Vehicle.CREATE_TABLE);
-        db.execSQL(FuelFinderContract.Vehicle.CREATE_TABLE);
         db.execSQL(FuelFinderContract.Abastecimento.CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+FuelFinderContract.Vehicle.TABLE_VEHICLE);
         db.execSQL("DROP TABLE IF EXISTS "+FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO);
         onCreate(db);
     }

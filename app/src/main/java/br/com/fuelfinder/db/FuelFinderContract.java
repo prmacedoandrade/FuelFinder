@@ -2,6 +2,11 @@ package br.com.fuelfinder.db;
 
 import android.provider.BaseColumns;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
+import br.com.fuelfinder.model.TipoCombustivel;
+
 /**
  * Created by Paulo on 05/03/2015.
  */
@@ -34,6 +39,41 @@ public final class FuelFinderContract {
                 + KEY_TANK + " INTEGER,"
                 + KEY_SYNC + " BOOLEAN"
                 + ");";
+
+    }
+
+
+    public static final class Abastecimento implements BaseColumns {
+
+        private Abastecimento() {}
+
+        public static final String TABLE_ABASTECIMENTO = "abastecimentos";
+        public static final String KEY_ODOMETRO = "odometro";
+        public static final String KEY_PRECO = "preco";
+        public static final String KEY_CUSTO_TOTAL = "custo_total";
+        public static final String KEY_LITROS = "litros";
+        public static final String KEY_DATA = "data";
+        public static final String KEY_TIPO = "tipo";
+        public static final String KEY_COORDENADAX = "x";
+        public static final String KEY_COORDENADAY = "y";
+        public static final String KEY_SYNC = "sync";
+        public static final String KEY_ID_VEICULO = "id_veiculo";
+        public static final String _ID = BaseColumns._ID;
+
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_ABASTECIMENTO + " ("
+                + " _id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + KEY_ODOMETRO + " INTEGER,"
+                + KEY_PRECO + " DOUBLE,"
+                + KEY_CUSTO_TOTAL + " DOUBLE,"
+                + KEY_LITROS + " DOUBLE,"
+                + KEY_DATA + " DATE,"
+                + KEY_TIPO + " TEXT,"
+                + KEY_COORDENADAX + " TEXT,"
+                + KEY_COORDENADAY + " TEXT,"
+                + KEY_ID_VEICULO + " TEXT,"
+                + KEY_SYNC + " BOOLEAN"
+                + ");";
+
 
     }
 

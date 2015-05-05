@@ -1,21 +1,33 @@
 package br.com.fuelfinder;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+
+import br.com.fuelfinder.db.AbastecimentoDBHelper;
+import br.com.fuelfinder.db.FuelFinderContract;
+import br.com.fuelfinder.db.FuelFinderDBHelper;
 
 
 public class AddFuelActivity extends ActionBarActivity implements LocationListener {
+
+    private ListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_fuel);
-
+        updateUI();
     }
 
     @Override
@@ -82,6 +94,34 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
     protected void onPause() {
         super.onPause();
         //locManager.removeUpdates(this);
+    }
+
+    private void updateUI(){
+
+        SQLiteDatabase sqlDB = new AbastecimentoDBHelper(this).getWritableDatabase();
+        Cursor cursor = sqlDB.query(FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO, new String[]{FuelFinderContract.Abastecimento._ID,FuelFinderContract.Abastecimento.KEY_DATA,FuelFinderContract.Abastecimento.KEY_PRECO},
+                null,null,null,null,null);
+
+        cursor.moveToFirst();
+
+        while(cursor.moveToNext()) {
+            Log.d("MainActivity cursor",
+                    cursor.getString(cursor.getColumnIndexOrThrow(FuelFinderContract.Abastecimento._ID)));
+        }
+
+        ListView listView = (ListView) findViewById(R.id.listAbastecimento);
+
+        listAdapter = new SimpleCursorAdapter(
+                this,
+                R.layout.lista_abastecimentos,
+                cursor,
+                new String[]{FuelFinderContract.Abastecimento._ID,FuelFinderContract.Abastecimento.KEY_DATA,FuelFinderContract.Abastecimento.KEY_PRECO},
+                new int[]{R.id.abastecimentoTextView},
+                0
+        );
+
+        listView.setAdapter(listAdapter);
+
     }
 
 

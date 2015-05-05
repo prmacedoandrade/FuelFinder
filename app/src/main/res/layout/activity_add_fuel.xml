@@ -5,4 +5,9 @@
     android:orientation="vertical"
     tools:context="br.com.fuelfinder.AddFuelActivity">
 
+    <ListView android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listAbastecimento"
+        android:layout_weight="1"/>
+
 </RelativeLayout>

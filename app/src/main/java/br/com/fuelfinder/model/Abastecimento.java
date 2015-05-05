@@ -24,16 +24,16 @@ public class Abastecimento {
 
     private TipoCombustivel tipoCombustivel;
 
-    private BigDecimal coordenadaX;
-    // Nao tenho certeza do tipo da coordenada
-    private BigDecimal coordenadaY;
+    private String coordenadaX;
+
+    private String coordenadaY;
 
     private boolean sincronizado;
 
     public Abastecimento() {
     }
 
-    public Abastecimento(long id, long odometro, BigDecimal preco, BigDecimal custoTotal, BigDecimal litros, Date dataAbastecimento, TipoCombustivel tipoCombustivel, BigDecimal coordenadaX, BigDecimal coordenadaY, boolean sincronizado) {
+    public Abastecimento(long id, long odometro, BigDecimal preco, BigDecimal custoTotal, BigDecimal litros, Date dataAbastecimento, TipoCombustivel tipoCombustivel, String coordenadaX, String coordenadaY, boolean sincronizado) {
         this.id = id;
         this.odometro = odometro;
         this.preco = preco;
@@ -102,19 +102,19 @@ public class Abastecimento {
         this.tipoCombustivel = tipoCombustivel;
     }
 
-    public BigDecimal getCoordenadaX() {
+    public String getCoordenadaX() {
         return coordenadaX;
     }
 
-    public void setCoordenadaX(BigDecimal coordenadaX) {
+    public void setCoordenadaX(String coordenadaX) {
         this.coordenadaX = coordenadaX;
     }
 
-    public BigDecimal getCoordenadaY() {
+    public String getCoordenadaY() {
         return coordenadaY;
     }
 
-    public void setCoordenadaY(BigDecimal coordenadaY) {
+    public void setCoordenadaY(String coordenadaY) {
         this.coordenadaY = coordenadaY;
     }
 
