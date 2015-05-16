@@ -21,12 +21,17 @@ import br.com.fuelfinder.db.FuelFinderDBHelper;
 
 public class AddFuelActivity extends ActionBarActivity implements LocationListener {
 
+    private String placa;
     private ListAdapter listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_fuel);
+
+        Bundle b = getIntent().getExtras();
+        placa = b.getString("placa");
+
         updateUI();
     }
 
@@ -48,6 +53,7 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
         if (id == R.id.action_add_fuel) {
 
             Intent i = new Intent(AddFuelActivity.this, ActivityAddFuelMap.class);
+            i.putExtra("placa",placa);
             startActivity(i);
             finish();
 
@@ -123,6 +129,5 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
         listView.setAdapter(listAdapter);
 
     }
-
 
 }

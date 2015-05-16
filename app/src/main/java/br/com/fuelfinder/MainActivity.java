@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInstaller;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
@@ -24,10 +23,9 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
-import com.google.android.gms.fitness.result.SessionReadResult;
+
 
 import br.com.fuelfinder.db.FuelFinderContract;
 import br.com.fuelfinder.db.FuelFinderDBHelper;
@@ -182,7 +180,13 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
     public void onGasButtonClick(View view) {
 
+        View v = (View) view.getParent();
+        TextView taskTextView = (TextView) v.findViewById(R.id.taskTextView);
+        String placa = taskTextView.getText().toString();
+
         Intent i = new Intent(MainActivity.this, AddFuelActivity.class);
+
+        i.putExtra("plava", placa);
         startActivity(i);
         //finish();
 
