@@ -186,7 +186,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
         Intent i = new Intent(MainActivity.this, AddFuelActivity.class);
 
-        i.putExtra("plava", placa);
+        i.putExtra("placa", placa);
         startActivity(i);
         //finish();
 

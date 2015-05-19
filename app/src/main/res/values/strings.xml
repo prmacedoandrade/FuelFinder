@@ -9,6 +9,8 @@
     <!-- ACTIVITY ADD FUEL -->
     <string name="action_add_fuel">Adicionar Combustível</string>
     <string name="action_find_fuel">Procurar Combustível</string>
+    <string name="label_custo">Custo</string>
+    <string name="label_preco">Preço</string>
 
     <!-- ACTIVITY MAIN (ADD VEHICLE) -->
     <string name="action_add_vehicle">Adicionar Veículo</string>

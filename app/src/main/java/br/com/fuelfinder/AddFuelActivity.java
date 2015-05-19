@@ -105,7 +105,8 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
     private void updateUI(){
 
         SQLiteDatabase sqlDB = new AbastecimentoDBHelper(this).getWritableDatabase();
-        Cursor cursor = sqlDB.query(FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO, new String[]{FuelFinderContract.Abastecimento._ID,FuelFinderContract.Abastecimento.KEY_DATA,FuelFinderContract.Abastecimento.KEY_PRECO},
+        Cursor cursor = sqlDB.query(FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO,
+                new String[]{FuelFinderContract.Abastecimento._ID,FuelFinderContract.Abastecimento.KEY_DATA,FuelFinderContract.Abastecimento.KEY_PRECO,FuelFinderContract.Abastecimento.KEY_CUSTO_TOTAL},
                 null,null,null,null,null);
 
         cursor.moveToFirst();
@@ -121,8 +122,8 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
                 this,
                 R.layout.lista_abastecimentos,
                 cursor,
-                new String[]{FuelFinderContract.Abastecimento._ID,FuelFinderContract.Abastecimento.KEY_DATA,FuelFinderContract.Abastecimento.KEY_PRECO},
-                new int[]{R.id.abastecimentoTextView},
+                new String[]{FuelFinderContract.Abastecimento.KEY_DATA,FuelFinderContract.Abastecimento.KEY_PRECO,FuelFinderContract.Abastecimento.KEY_CUSTO_TOTAL},
+                new int[]{R.id.abastecimentoTextViewData,R.id.abastecimentoTextViewPreco,R.id.abastecimentoTextViewCusto},
                 0
         );
 
