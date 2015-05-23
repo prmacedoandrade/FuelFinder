@@ -33,7 +33,6 @@ import br.com.fuelfinder.db.FuelFinderDBHelper;
 public class LoginActivity extends Activity {
 
     private CallbackManager callbackManager;
-    private static String idUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +51,6 @@ public class LoginActivity extends Activity {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                        idUser = AccessToken.getCurrentAccessToken().getUserId();
                         startActivity(i);
                         finish();
                     }
@@ -97,12 +95,6 @@ public class LoginActivity extends Activity {
 
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
 
-        //@WebParam(name = "placa") String placa,
-        //@WebParam(name = "id_usuario") String id_usuario,
-        //@WebParam(name = "modelo") String modelo,
-        //@WebParam(name = "odometro") int odometro,
-        //@WebParam(name = "tanque") int tanque)
-
         request.addProperty("placa","placa_teste");
         request.addProperty("id_usuario","123");
         request.addProperty("modelo","123");
@@ -114,14 +106,7 @@ public class LoginActivity extends Activity {
         try {
             androidHttpTransport.call(SOAP_ACTION, envelope);
 
-            //SoapPrimitive  resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
-            // SoapPrimitive  resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
             SoapObject resultsRequestSOAP = (SoapObject) envelope.bodyIn;
-
-
-           // lblResult.setText(resultsRequestSOAP.toString());
-           // System.out.println("Response::"+resultsRequestSOAP.toString());
-
 
         } catch (Exception e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
@@ -129,16 +114,6 @@ public class LoginActivity extends Activity {
             System.out.println("Error"+e);
         }
 
-        //String sql = String.format("DELETE FROM %s WHERE %s = '%s'",
-        //        FuelFinderContract.Vehicle.TABLE_VEHICLE,
-        //        FuelFinderContract.Vehicle.KEY_LICENSE,
-        //        placa);
-
-        //FuelFinderDBHelper helper = new FuelFinderDBHelper(MainActivity.this);
-        //SQLiteDatabase db = helper.getWritableDatabase();
-
-        //db.execSQL(sql);
-        //updateUI();
     }
 
 
@@ -148,11 +123,4 @@ public class LoginActivity extends Activity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    public static String getIdUser() {
-        return idUser;
-    }
-
-    public static void setIdUser(String idUser) {
-        LoginActivity.idUser = idUser;
-    }
 }

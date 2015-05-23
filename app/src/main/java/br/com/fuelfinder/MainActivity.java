@@ -2,6 +2,7 @@ package br.com.fuelfinder;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,7 +10,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.text.InputType;
 import android.util.Log;
@@ -22,13 +25,23 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 
 
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+
 import br.com.fuelfinder.db.FuelFinderContract;
 import br.com.fuelfinder.db.FuelFinderDBHelper;
+import br.com.fuelfinder.model.Veiculo;
+import br.com.fuelfinder.util.Utils;
+import br.com.fuelfinder.util.WebservicePersistence;
 
 
 public class MainActivity extends ActionBarActivity implements LocationListener {
@@ -36,11 +49,15 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
     private ListAdapter listAdapter;
     private LocationManager locManager;
     private boolean achouLocalizacao = false;
+    private String idUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        idUser = AccessToken.getCurrentAccessToken().getUserId();
+
         updateUI();
 
     }
@@ -107,15 +124,37 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
                     SQLiteDatabase db = helper.getWritableDatabase();
                     ContentValues values = new ContentValues();
 
-                    values.clear();
-                    values.put(FuelFinderContract.Vehicle.KEY_LICENSE, inputPlaca.getText().toString());
-                    values.put(FuelFinderContract.Vehicle.KEY_MODEL, inputModelo.getText().toString());
-                    values.put(FuelFinderContract.Vehicle.ID_USER, LoginActivity.getIdUser());
-                    values.put(FuelFinderContract.Vehicle.KEY_ODOMETER, 0);
-                    values.put(FuelFinderContract.Vehicle.KEY_SYNC, Boolean.FALSE);
-                    values.put(FuelFinderContract.Vehicle.KEY_TANK, Integer.valueOf(inputVolume.getText().toString()));
+                    String placa = inputPlaca.getText().toString();
+                    String modelo = inputModelo.getText().toString();
+                    Integer volumeTanque = Integer.valueOf(inputVolume.getText().toString());
 
-                    db.insertWithOnConflict(FuelFinderContract.Vehicle.TABLE_VEHICLE,null,values,
+                    values.clear();
+                    values.put(FuelFinderContract.Vehicle.KEY_LICENSE, placa);
+                    values.put(FuelFinderContract.Vehicle.KEY_MODEL, modelo);
+                    values.put(FuelFinderContract.Vehicle.ID_USER, idUser );
+                    values.put(FuelFinderContract.Vehicle.KEY_ODOMETER, 0);
+                    values.put(FuelFinderContract.Vehicle.KEY_TANK, volumeTanque);
+
+                    if (isDataConnected()) {
+                        Veiculo veiculo = new Veiculo();
+                        veiculo.setPlaca(placa);
+                        veiculo.setModelo(modelo);
+                        veiculo.setIdUsuarioFacebook(idUser);
+                        veiculo.setOdometro(0);
+                        veiculo.setVolumeTanque(volumeTanque);
+
+                        //addCarToWebservice(veiculo);
+                        WebservicePersistence webservicePersistence = new WebservicePersistence();
+                        webservicePersistence.setVeiculo(veiculo);
+                        webservicePersistence.start();
+
+                        values.put(FuelFinderContract.Vehicle.KEY_SYNC, Boolean.TRUE);
+                    } else {
+                        values.put(FuelFinderContract.Vehicle.KEY_SYNC, Boolean.FALSE);
+                    }
+
+
+                    db.insertWithOnConflict(FuelFinderContract.Vehicle.TABLE_VEHICLE, null, values,
                             SQLiteDatabase.CONFLICT_IGNORE);
 
                     updateUI();
@@ -134,13 +173,27 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
         if (id == R.id.action_log_out) {
             LoginManager.getInstance().logOut();
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            LoginActivity.setIdUser(new String());
             startActivity(i);
             this.finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Metodo verifica se existe conexao com internet
+     *
+     * @return
+     */
+    private boolean isDataConnected() {
+        try {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            return cm.getActiveNetworkInfo().isConnectedOrConnecting();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     @Override
     protected void onStop() {
@@ -244,6 +297,38 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
     protected void onPause() {
         super.onPause();
         AppEventsLogger.deactivateApp(this);
+    }
+
+    public void addCarToWebservice(Veiculo veiculo) {
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        SoapObject request = new SoapObject(Utils.NAMESPACE, Utils.METHOD_NAME_ADD_CAR);
+
+        request.addProperty("placa",veiculo.getPlaca());
+        request.addProperty("id_usuario",veiculo.getIdUsuarioFacebook());
+        request.addProperty("modelo",veiculo.getModelo());
+        request.addProperty("odometro",veiculo.getOdometro());
+        request.addProperty("tanque",veiculo.getVolumeTanque());
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.setOutputSoapObject(request);
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(Utils.URL);
+        try {
+            androidHttpTransport.call(Utils.SOAP_ACTION_ADD_CAR, envelope);
+
+            //SoapPrimitive  resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+            // SoapPrimitive  resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+            SoapObject resultsRequestSOAP = (SoapObject) envelope.bodyIn;
+
+
+            // lblResult.setText(resultsRequestSOAP.toString());
+            // System.out.println("Response::"+resultsRequestSOAP.toString());
+
+        } catch (Exception e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+            System.out.println("Error"+e);
+        }
+
     }
 
     @Override

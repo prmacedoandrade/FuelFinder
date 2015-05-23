@@ -6,36 +6,37 @@ package br.com.fuelfinder.model;
  */
 public class Veiculo {
 
-    private long id;
-
+    private Integer id;
+    //
+    private int idAndroid;
+    //
     private String placa;
-
-    private String marca;
-
+    //
+    private String idUsuarioFacebook;
+    //
     private String modelo;
-
-    private long odometroAtual;
-
-    private long volumeTanque;
+    //
+    private int odometro;
+    //
+    private int volumeTanque;
 
     public Veiculo() {
     }
 
-    public Veiculo(long id, String placa, String marca, String modelo, long odometroAtual, long volumeTanque) {
-        this.id = id;
-        this.placa = placa;
-        this.marca = marca;
-        this.modelo = modelo;
-        this.odometroAtual = odometroAtual;
-        this.volumeTanque = volumeTanque;
-    }
-
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public int getIdAndroid() {
+        return idAndroid;
+    }
+
+    public void setIdAndroid(int idAndroid) {
+        this.idAndroid = idAndroid;
     }
 
     public String getPlaca() {
@@ -46,12 +47,12 @@ public class Veiculo {
         this.placa = placa;
     }
 
-    public String getMarca() {
-        return marca;
+    public String getIdUsuarioFacebook() {
+        return idUsuarioFacebook;
     }
 
-    public void setMarca(String marca) {
-        this.marca = marca;
+    public void setIdUsuarioFacebook(String idUsuarioFacebook) {
+        this.idUsuarioFacebook = idUsuarioFacebook;
     }
 
     public String getModelo() {
@@ -62,36 +63,19 @@ public class Veiculo {
         this.modelo = modelo;
     }
 
-    public long getOdometroAtual() {
-        return odometroAtual;
+    public int getOdometro() {
+        return odometro;
     }
 
-    public void setOdometroAtual(long odometroAtual) {
-        this.odometroAtual = odometroAtual;
+    public void setOdometro(int odometro) {
+        this.odometro = odometro;
     }
 
-    public long getVolumeTanque() {
+    public int getVolumeTanque() {
         return volumeTanque;
     }
 
-    public void setVolumeTanque(long volumeTanque) {
+    public void setVolumeTanque(int volumeTanque) {
         this.volumeTanque = volumeTanque;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Veiculo veiculo = (Veiculo) o;
-
-        if (id != veiculo.id) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return (int) (id ^ (id >>> 32));
     }
 }
