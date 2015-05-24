@@ -7,6 +7,8 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.text.SimpleDateFormat;
+
 import br.com.fuelfinder.AddFuelActivity;
 import br.com.fuelfinder.db.FuelFinderContract;
 import br.com.fuelfinder.model.Abastecimento;
@@ -69,13 +71,15 @@ public class WebservicePersistence extends Thread {
 
              */
 
-            request.addProperty("latitude",abastecimento.getLatitude());
-            request.addProperty("longitude",abastecimento.getLongitude());
-            request.addProperty("litros",abastecimento.getLitros());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+            request.addProperty("latitude",String.valueOf(abastecimento.getLatitude()));
+            request.addProperty("longitude",String.valueOf(abastecimento.getLongitude()));
+            request.addProperty("litros",String.valueOf(abastecimento.getLitros()));
             request.addProperty("idVeiculo",abastecimento.getPlacaVeiculo());
-            request.addProperty("preco",abastecimento.getPreco());
-            request.addProperty("custoTotal",abastecimento.getCustoTotal());
-            request.addProperty("data",abastecimento.getData());
+            request.addProperty("preco",String.valueOf(abastecimento.getPreco()));
+            request.addProperty("custoTotal",String.valueOf(abastecimento.getCustoTotal()));
+            request.addProperty("data",sdf.format(abastecimento.getData()));
             request.addProperty("odometro",abastecimento.getOdometro());
 
 
@@ -97,7 +101,6 @@ public class WebservicePersistence extends Thread {
                 //Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
                 System.out.println("Error"+e);
             }
-
 
         }
 

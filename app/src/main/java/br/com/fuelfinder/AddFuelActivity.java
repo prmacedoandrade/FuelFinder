@@ -113,7 +113,7 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
                 null,
                 null,
                 null,
-                null);
+                FuelFinderContract.Abastecimento._ID+" DESC");
 
         cursor.moveToFirst();
 
