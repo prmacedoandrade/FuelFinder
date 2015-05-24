@@ -70,8 +70,6 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
     @Override
     public void onLocationChanged(Location location) {
 
-
-
     }
 
     @Override
@@ -106,8 +104,16 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
 
         SQLiteDatabase sqlDB = new AbastecimentoDBHelper(this).getWritableDatabase();
         Cursor cursor = sqlDB.query(FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO,
-                new String[]{FuelFinderContract.Abastecimento._ID,FuelFinderContract.Abastecimento.KEY_DATA,FuelFinderContract.Abastecimento.KEY_PRECO,FuelFinderContract.Abastecimento.KEY_CUSTO_TOTAL},
-                null,null,null,null,null);
+                new String[]{FuelFinderContract.Abastecimento._ID,
+                        FuelFinderContract.Abastecimento.KEY_DATA,
+                        FuelFinderContract.Abastecimento.KEY_PRECO,
+                        FuelFinderContract.Abastecimento.KEY_CUSTO_TOTAL,
+                        FuelFinderContract.Abastecimento.KEY_ID_VEICULO},
+                FuelFinderContract.Abastecimento.KEY_ID_VEICULO +"='" + placa +"'",
+                null,
+                null,
+                null,
+                null);
 
         cursor.moveToFirst();
 

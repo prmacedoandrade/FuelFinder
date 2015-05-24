@@ -9,6 +9,9 @@ public class Utils {
     public static final String NAMESPACE = "http://fuelFinder.com.br/";
 
     public static final String METHOD_NAME_ADD_CAR = "adicionarVeiculo";
+    public static final String METHOD_NAME_ADD_FUEL = "adicionarAbastecimento";
+
     public static final String SOAP_ACTION_ADD_CAR = "urn:" + METHOD_NAME_ADD_CAR;
+    public static final String SOAP_ACTION_ADD_FUEL = "urn:" + METHOD_NAME_ADD_FUEL;
 
 }

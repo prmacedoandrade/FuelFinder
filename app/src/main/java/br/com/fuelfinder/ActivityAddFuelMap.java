@@ -2,27 +2,35 @@ package br.com.fuelfinder;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.internal.safeparcel.a;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,6 +44,9 @@ import java.util.Date;
 
 import br.com.fuelfinder.db.AbastecimentoDBHelper;
 import br.com.fuelfinder.db.FuelFinderContract;
+import br.com.fuelfinder.db.FuelFinderDBHelper;
+import br.com.fuelfinder.model.Abastecimento;
+import br.com.fuelfinder.util.WebservicePersistence;
 
 public class ActivityAddFuelMap extends ActionBarActivity implements LocationListener,ConnectionCallbacks, OnConnectionFailedListener {
 
@@ -74,10 +85,6 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
                             draggable(true));
         }
 
-
-
-
-
     }
 
 
@@ -89,14 +96,14 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
 
 
         //String sql = String.format("DELETE FROM %s WHERE %s = '%s'",
-         //       FuelFinderContract.Vehicle.TABLE_VEHICLE,
-         //       FuelFinderContract.Vehicle.KEY_LICENSE,
-         //       placa);
+        //       FuelFinderContract.Vehicle.TABLE_VEHICLE,
+        //       FuelFinderContract.Vehicle.KEY_LICENSE,
+        //       placa);
 
         //FuelFinderDBHelper helper = new FuelFinderDBHelper(MainActivity.this);
         //SQLiteDatabase db = helper.getWritableDatabase();
 
-       // db.execSQL(sql);
+        // db.execSQL(sql);
 
     }
 
@@ -117,12 +124,10 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        // ADICIONAR VEICULO
+        // ADICIONAR ABASTECIMENTO
         if (id == R.id.action_add_refuel) {
 
             LinearLayout layout = new LinearLayout(this);
@@ -138,20 +143,14 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
             final TextView labelCusto = new TextView(this);
 
 
-            labelOdometro.setText("Odómetro");
+            labelOdometro.setText("Odômetro");
             labelPrecoLitros.setText("Preço por litro");
             labelCusto.setText("Valor total");
 
 
             inputOdometro.setInputType(InputType.TYPE_CLASS_NUMBER);
-            inputPrecoLitros.setInputType(InputType.TYPE_CLASS_NUMBER);
-
+            inputPrecoLitros.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             inputCusto.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-
-
-            //inputPrecoLitros.addTextChangedListener(new CurrencyTextWatcher());
-            //inputCusto.addTextChangedListener(new CurrencyTextWatcher());
 
             layout.addView(labelOdometro);
             layout.addView(inputOdometro);
@@ -159,7 +158,6 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
             layout.addView(inputPrecoLitros);
             layout.addView(labelCusto);
             layout.addView(inputCusto);
-
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Adicionar abastecimento");
@@ -177,25 +175,59 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
 
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
+                    String odometro = inputOdometro.getText().toString();
+                    Date data = new Date();
+                    String preco = inputPrecoLitros.getText().toString();
+                    String custoTotal = inputCusto.getText().toString();
+                    double custoTotalDouble = Double.parseDouble(inputCusto.getText().toString());
+                    double precoDouble = Double.parseDouble(inputPrecoLitros.getText().toString());
+                    double litrosDouble = (custoTotalDouble / precoDouble);
+                    Double latitude = marker.getPosition().latitude;
+                    Double longitude = marker.getPosition().latitude;
+
                     values.clear();
-                    values.put(FuelFinderContract.Abastecimento.KEY_ODOMETRO, inputOdometro.getText().toString());
-                    values.put(FuelFinderContract.Abastecimento.KEY_DATA, sdf.format(new Date()));
-                    values.put(FuelFinderContract.Abastecimento.KEY_CUSTO_TOTAL, inputCusto.getText().toString());
-                    values.put(FuelFinderContract.Abastecimento.KEY_PRECO, inputPrecoLitros.getText().toString());
-                    values.put(FuelFinderContract.Abastecimento.KEY_SYNC, Boolean.FALSE);
+                    values.put(FuelFinderContract.Abastecimento.KEY_ODOMETRO, odometro);
+                    values.put(FuelFinderContract.Abastecimento.KEY_DATA, sdf.format(data));
+                    values.put(FuelFinderContract.Abastecimento.KEY_CUSTO_TOTAL, custoTotal);
+                    values.put(FuelFinderContract.Abastecimento.KEY_PRECO, preco);
+
                     values.put(FuelFinderContract.Abastecimento.KEY_TIPO, "GASOLINA");
                     values.put(FuelFinderContract.Abastecimento.KEY_ID_VEICULO, placa);
 
-                    double custoTotal = Double.parseDouble(inputCusto.getText().toString());
-                    double preco = Double.parseDouble(inputPrecoLitros.getText().toString());
+                    values.put(FuelFinderContract.Abastecimento.KEY_LITROS, litrosDouble);
+                    values.put(FuelFinderContract.Abastecimento.KEY_COORDENADAX, latitude);
+                    values.put(FuelFinderContract.Abastecimento.KEY_COORDENADAY, longitude);
 
-                    values.put(FuelFinderContract.Abastecimento.KEY_LITROS, custoTotal*preco);
-                    values.put(FuelFinderContract.Abastecimento.KEY_COORDENADAX, marker.getPosition().latitude);
-                    values.put(FuelFinderContract.Abastecimento.KEY_COORDENADAY,marker.getPosition().latitude);
+                    if (isDataConnected()) {
+
+                        Abastecimento abastecimento = new Abastecimento();
+                        abastecimento.setCustoTotal(custoTotalDouble);
+                        abastecimento.setData(data);
+                        abastecimento.setLatitude(latitude);
+                        abastecimento.setLongitude(longitude);
+                        abastecimento.setLitros(litrosDouble);
+                        abastecimento.setOdometro(Long.valueOf(odometro));
+                        abastecimento.setPreco(precoDouble);
+                        abastecimento.setPlacaVeiculo(placa);
+
+                        WebservicePersistence webservicePersistence = new WebservicePersistence();
+                        webservicePersistence.setAbastecimento(abastecimento);
+                        webservicePersistence.start();
+
+                        values.put(FuelFinderContract.Abastecimento.KEY_SYNC, Boolean.TRUE);
+
+                    } else {
+                        values.put(FuelFinderContract.Abastecimento.KEY_SYNC, Boolean.FALSE);
+                    }
 
 
-                    db.insertWithOnConflict(FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO,null,values,
+                    db.insertWithOnConflict(FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO, null, values,
                             SQLiteDatabase.CONFLICT_IGNORE);
+
+                    Intent i = new Intent(ActivityAddFuelMap.this, AddFuelActivity.class);
+
+                    i.putExtra("placa", placa);
+                    startActivity(i);
 
                     //updateUI();
 
@@ -212,6 +244,19 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Metodo verifica se existe conexao com internet
+     *
+     * @return
+     */
+    private boolean isDataConnected() {
+        try {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            return cm.getActiveNetworkInfo().isConnectedOrConnecting();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     @Override
     protected void onResume() {

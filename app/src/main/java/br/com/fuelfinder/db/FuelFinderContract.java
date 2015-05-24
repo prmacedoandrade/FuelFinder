@@ -68,8 +68,8 @@ public final class FuelFinderContract {
                 + KEY_LITROS + " DOUBLE,"
                 + KEY_DATA + " DATE,"
                 + KEY_TIPO + " TEXT,"
-                + KEY_COORDENADAX + " TEXT,"
-                + KEY_COORDENADAY + " TEXT,"
+                + KEY_COORDENADAX + " DOUBLE,"
+                + KEY_COORDENADAY + " DOUBLE,"
                 + KEY_ID_VEICULO + " TEXT,"
                 + KEY_SYNC + " BOOLEAN"
                 + ");";

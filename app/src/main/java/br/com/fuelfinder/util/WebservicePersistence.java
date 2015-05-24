@@ -55,6 +55,50 @@ public class WebservicePersistence extends Thread {
 
         if(abastecimento!= null){
 
+            SoapObject request = new SoapObject(Utils.NAMESPACE, Utils.METHOD_NAME_ADD_FUEL);
+            /*
+
+            @WebParam(name = "latitude") double latitude,
+            @WebParam(name = "longitude") double longitude,
+            @WebParam(name = "litros") double litros,
+            @WebParam(name = "idVeiculo") String idVeiculo,
+            @WebParam(name = "preco") String preco,
+            @WebParam(name = "custoTotal") String custoTotal,
+            @WebParam(name = "data") Date data,
+            @WebParam(name = "odometro") String odometro)
+
+             */
+
+            request.addProperty("latitude",abastecimento.getLatitude());
+            request.addProperty("longitude",abastecimento.getLongitude());
+            request.addProperty("litros",abastecimento.getLitros());
+            request.addProperty("idVeiculo",abastecimento.getPlacaVeiculo());
+            request.addProperty("preco",abastecimento.getPreco());
+            request.addProperty("custoTotal",abastecimento.getCustoTotal());
+            request.addProperty("data",abastecimento.getData());
+            request.addProperty("odometro",abastecimento.getOdometro());
+
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.setOutputSoapObject(request);
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(Utils.URL);
+            try {
+                androidHttpTransport.call(Utils.SOAP_ACTION_ADD_FUEL, envelope);
+
+                //SoapPrimitive  resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+                // SoapPrimitive  resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+                SoapObject resultsRequestSOAP = (SoapObject) envelope.bodyIn;
+
+
+                // lblResult.setText(resultsRequestSOAP.toString());
+                // System.out.println("Response::"+resultsRequestSOAP.toString());
+
+            } catch (Exception e) {
+                //Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+                System.out.println("Error"+e);
+            }
+
+
         }
 
     }

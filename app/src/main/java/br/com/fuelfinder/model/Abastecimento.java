@@ -8,138 +8,109 @@ import java.util.Date;
  */
 public class Abastecimento {
 
-    private long id;
-
-    private long odometro;
-
-    private BigDecimal preco;
-
-    private BigDecimal custoTotal;
-    /**
-     * Quantidade de litros = custoTotal X preco
-     */
-    private  BigDecimal litros;
-
-    private Date dataAbastecimento;
-
-    private TipoCombustivel tipoCombustivel;
-
-    private String coordenadaX;
-
-    private String coordenadaY;
-
-    private boolean sincronizado;
+    private Integer id;
+    //
+    private Long odometro;
+    //
+    private Date data;
+    //
+    private double preco;
+    //
+    private double custoTotal;
+    //
+    private double litros;
+    //
+    private String placaVeiculo;
+    //
+    private double latitude;
+    //
+    private double longitude;
 
     public Abastecimento() {
     }
 
-    public Abastecimento(long id, long odometro, BigDecimal preco, BigDecimal custoTotal, BigDecimal litros, Date dataAbastecimento, TipoCombustivel tipoCombustivel, String coordenadaX, String coordenadaY, boolean sincronizado) {
+    public Abastecimento(Integer id, Long odometro, Date data, double preco, double custoTotal, double litros, String placaVeiculo, double latitude, double longitude) {
         this.id = id;
         this.odometro = odometro;
+        this.data = data;
         this.preco = preco;
         this.custoTotal = custoTotal;
         this.litros = litros;
-        this.dataAbastecimento = dataAbastecimento;
-        this.tipoCombustivel = tipoCombustivel;
-        this.coordenadaX = coordenadaX;
-        this.coordenadaY = coordenadaY;
-        this.sincronizado = sincronizado;
+        this.placaVeiculo = placaVeiculo;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public long getOdometro() {
+    public Long getOdometro() {
         return odometro;
     }
 
-    public void setOdometro(long odometro) {
+    public void setOdometro(Long odometro) {
         this.odometro = odometro;
     }
 
-    public BigDecimal getPreco() {
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+    public double getPreco() {
         return preco;
     }
 
-    public void setPreco(BigDecimal preco) {
+    public void setPreco(double preco) {
         this.preco = preco;
     }
 
-    public BigDecimal getCustoTotal() {
+    public double getCustoTotal() {
         return custoTotal;
     }
 
-    public void setCustoTotal(BigDecimal custoTotal) {
+    public void setCustoTotal(double custoTotal) {
         this.custoTotal = custoTotal;
     }
 
-    public BigDecimal getLitros() {
+    public double getLitros() {
         return litros;
     }
 
-    public void setLitros(BigDecimal litros) {
+    public void setLitros(double litros) {
         this.litros = litros;
     }
 
-    public Date getDataAbastecimento() {
-        return dataAbastecimento;
+    public String getPlacaVeiculo() {
+        return placaVeiculo;
     }
 
-    public void setDataAbastecimento(Date dataAbastecimento) {
-        this.dataAbastecimento = dataAbastecimento;
+    public void setPlacaVeiculo(String placaVeiculo) {
+        this.placaVeiculo = placaVeiculo;
     }
 
-    public TipoCombustivel getTipoCombustivel() {
-        return tipoCombustivel;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setTipoCombustivel(TipoCombustivel tipoCombustivel) {
-        this.tipoCombustivel = tipoCombustivel;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public String getCoordenadaX() {
-        return coordenadaX;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setCoordenadaX(String coordenadaX) {
-        this.coordenadaX = coordenadaX;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    public String getCoordenadaY() {
-        return coordenadaY;
-    }
-
-    public void setCoordenadaY(String coordenadaY) {
-        this.coordenadaY = coordenadaY;
-    }
-
-    public boolean isSincronizado() {
-        return sincronizado;
-    }
-
-    public void setSincronizado(boolean sincronizado) {
-        this.sincronizado = sincronizado;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Abastecimento that = (Abastecimento) o;
-
-        if (id != that.id) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return (int) (id ^ (id >>> 32));
-    }
 }

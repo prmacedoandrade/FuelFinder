@@ -55,9 +55,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         idUser = AccessToken.getCurrentAccessToken().getUserId();
-
         updateUI();
 
     }
@@ -143,7 +141,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
                         veiculo.setOdometro(0);
                         veiculo.setVolumeTanque(volumeTanque);
 
-                        //addCarToWebservice(veiculo);
                         WebservicePersistence webservicePersistence = new WebservicePersistence();
                         webservicePersistence.setVeiculo(veiculo);
                         webservicePersistence.start();
@@ -194,7 +191,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
         }
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -241,7 +237,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
         i.putExtra("placa", placa);
         startActivity(i);
-        //finish();
 
         /*
         View v = (View) view.getParent();
