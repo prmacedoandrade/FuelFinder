@@ -10,9 +10,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import br.com.fuelfinder.db.AbastecimentoDBHelper;
 import br.com.fuelfinder.db.FuelFinderContract;
@@ -28,6 +31,17 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_fuel);
+
+        ListView list = (ListView)findViewById(R.id.listAbastecimento);
+        list.setClickable(true);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(), "TESTE", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         Bundle b = getIntent().getExtras();
         placa = b.getString("placa");

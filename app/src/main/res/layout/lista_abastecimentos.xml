@@ -8,14 +8,15 @@
 
     <TextView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="DATA"
         android:id="@+id/abastecimentoTextViewData"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textSize="25dp"
-        android:gravity="left"
-        android:layout_weight="0.98" />
+        android:gravity="left|center"
+        android:layout_weight="0.98"
+        android:elegantTextHeight="false" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
