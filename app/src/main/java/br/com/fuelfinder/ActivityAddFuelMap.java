@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -58,6 +59,8 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
     private LocationManager locManager;
     private GoogleApiClient mGoogleApiClient;
     private boolean achouLocalizacao;
+    private double latitudeAtual;
+    private double longitudeAtual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,25 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
         locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mMap = ((AddFuelMapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+
+                latitudeAtual = marker.getPosition().latitude;
+                longitudeAtual = marker.getPosition().longitude;
+
+            }
+        });
 
         buildGoogleApiClient();
 
@@ -82,7 +104,6 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
         }else{
 
             achouLocalizacao = true;
-
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-3.771026,-38.483532), 16));
             marker = mMap.addMarker(new MarkerOptions()
                     .position((new LatLng(-3.771026,-38.483532)))
@@ -198,16 +219,16 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
                     values.put(FuelFinderContract.Abastecimento.KEY_ID_VEICULO, placa);
 
                     values.put(FuelFinderContract.Abastecimento.KEY_LITROS, litrosDouble);
-                    values.put(FuelFinderContract.Abastecimento.KEY_COORDENADAX, latitude);
-                    values.put(FuelFinderContract.Abastecimento.KEY_COORDENADAY, longitude);
+                    values.put(FuelFinderContract.Abastecimento.KEY_COORDENADAX, latitudeAtual);
+                    values.put(FuelFinderContract.Abastecimento.KEY_COORDENADAY, longitudeAtual);
 
                     if (isDataConnected()) {
 
                         Abastecimento abastecimento = new Abastecimento();
                         abastecimento.setCustoTotal(custoTotalDouble);
                         abastecimento.setData(data);
-                        abastecimento.setLatitude(latitude);
-                        abastecimento.setLongitude(longitude);
+                        abastecimento.setLatitude(latitudeAtual);
+                        abastecimento.setLongitude(longitudeAtual);
                         abastecimento.setLitros(litrosDouble);
                         abastecimento.setOdometro(Long.valueOf(odometro));
                         abastecimento.setPreco(precoDouble);

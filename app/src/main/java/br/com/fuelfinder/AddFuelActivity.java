@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import br.com.fuelfinder.db.AbastecimentoDBHelper;
@@ -48,7 +49,8 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Toast.makeText(getApplicationContext(), "TESTE", Toast.LENGTH_SHORT).show();
+                TextView taskTextView = (TextView) view.findViewById(R.id.abastecimentoTextViewId);
+                Toast.makeText(getApplicationContext(),taskTextView.getText() , Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -83,7 +85,6 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
         }
 
         if (id == R.id.action_find_fuel) {
-
 
             locationManager =  (LocationManager) getSystemService(LOCATION_SERVICE);
             isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -147,7 +148,9 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
 
         SQLiteDatabase sqlDB = new AbastecimentoDBHelper(this).getWritableDatabase();
         Cursor cursor = sqlDB.query(FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO,
-                new String[]{FuelFinderContract.Abastecimento._ID,
+                new String[]{FuelFinderContract.Abastecimento.KEY_COORDENADAX,
+                        FuelFinderContract.Abastecimento.KEY_COORDENADAY,
+                        FuelFinderContract.Abastecimento._ID,
                         FuelFinderContract.Abastecimento.KEY_DATA,
                         FuelFinderContract.Abastecimento.KEY_PRECO,
                         FuelFinderContract.Abastecimento.KEY_CUSTO_TOTAL,
@@ -171,8 +174,8 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
                 this,
                 R.layout.lista_abastecimentos,
                 cursor,
-                new String[]{FuelFinderContract.Abastecimento.KEY_DATA,FuelFinderContract.Abastecimento.KEY_PRECO,FuelFinderContract.Abastecimento.KEY_CUSTO_TOTAL},
-                new int[]{R.id.abastecimentoTextViewData,R.id.abastecimentoTextViewPreco,R.id.abastecimentoTextViewCusto},
+                new String[]{FuelFinderContract.Abastecimento.KEY_COORDENADAX,FuelFinderContract.Abastecimento.KEY_COORDENADAY,FuelFinderContract.Abastecimento._ID,FuelFinderContract.Abastecimento.KEY_DATA,FuelFinderContract.Abastecimento.KEY_PRECO,FuelFinderContract.Abastecimento.KEY_CUSTO_TOTAL},
+                new int[]{R.id.abastecimentoTextViewLatitude,R.id.abastecimentoTextViewLongitude,R.id.abastecimentoTextViewId,R.id.abastecimentoTextViewData,R.id.abastecimentoTextViewPreco,R.id.abastecimentoTextViewCusto},
                 0
         );
 
