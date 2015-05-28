@@ -46,22 +46,33 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
         ListView list = (ListView)findViewById(R.id.listAbastecimento);
         list.setClickable(true);
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView taskTextView = (TextView) view.findViewById(R.id.abastecimentoTextViewId);
-                Toast.makeText(getApplicationContext(),taskTextView.getText() , Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
         Bundle b = getIntent().getExtras();
         placa = b.getString("placa");
 
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                TextView latitudeText = (TextView) view.findViewById(R.id.abastecimentoTextViewLatitude);
+                TextView longitudeText =(TextView) view.findViewById(R.id.abastecimentoTextViewLongitude);
+                TextView precoText = (TextView) view.findViewById(R.id.abastecimentoTextViewPreco);
+
+                Intent intend = new Intent(AddFuelActivity.this, ActivityViewFuel.class);
+                intend.putExtra("placa", placa);
+                intend.putExtra("latitude", Double.valueOf(latitudeText.getText().toString()));
+                intend.putExtra("longitude", Double.valueOf(longitudeText.getText().toString()));
+
+                intend.putExtra("preco", Double.valueOf(Double.valueOf(precoText.getText().toString())));
+
+                startActivity(intend);
+
+                //TextView taskTextView = (TextView) view.findViewById(R.id.abastecimentoTextViewId);
+                //Toast.makeText(getApplicationContext(),taskTextView.getText() , Toast.LENGTH_SHORT).show();
+            }
+        });
+
         updateUI();
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -158,10 +158,11 @@ public class ActivityFindFuelMap extends ActionBarActivity  implements LocationL
                     .position(new LatLng(latitude, longitude))
                     .title("Valor litro R$ " + preco));
             abastecimentoMaisBarato.showInfoWindow();
+            abastecimentoMaisBarato.setDraggable(false);
 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
 
-            Toast.makeText(getApplicationContext(), "LAT "+latitude+" LONG "+longitude +"PREC "+preco , Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "LAT "+latitude+" LONG "+longitude +"PREC "+preco , Toast.LENGTH_LONG).show();
 
         }
 

@@ -22,5 +22,6 @@
     <string name="facebook_app_id">1036710779689795</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_activity_find_fuel_map">Buscar</string>
+    <string name="title_activity_activity_view_fuel">Detalhes</string>
 
 </resources>

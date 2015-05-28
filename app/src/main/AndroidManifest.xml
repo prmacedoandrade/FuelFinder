@@ -10,8 +10,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
-
     <!-- Permissoes  API Google maps -->
     <permission
         android:name="br.com.fuelfinder.MAPS_RECEIVE"
@@ -62,7 +60,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ConnectionChangeReceiver"
+        <receiver
+            android:name=".ConnectionChangeReceiver"
             android:label="NetworkConnection" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -72,6 +71,10 @@
         <activity
             android:name=".ActivityFindFuelMap"
             android:label="@string/title_activity_activity_find_fuel_map" >
+        </activity>
+        <activity
+            android:name=".ActivityViewFuel"
+            android:label="@string/title_activity_activity_view_fuel" >
         </activity>
     </application>
 
