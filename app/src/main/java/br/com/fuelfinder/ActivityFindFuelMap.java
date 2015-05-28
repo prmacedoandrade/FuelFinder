@@ -50,10 +50,12 @@ public class ActivityFindFuelMap extends ActionBarActivity  implements LocationL
         mLoc = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
 
+        /*
         if(mLoc!=null){
             achouLocalizacao = true;
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLoc.getLatitude(), mLoc.getLongitude()), 16));
         }
+        */
 
         locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 10, 1, this);
 
@@ -110,6 +112,7 @@ public class ActivityFindFuelMap extends ActionBarActivity  implements LocationL
 
         if (location != null && !achouLocalizacao) {
             achouLocalizacao = true;
+            /*
             String loc = "Lat:" + location.getLatitude() + "\n Long:"
                     + location.getLongitude();
             //txtLoc.setText(loc);
@@ -119,6 +122,7 @@ public class ActivityFindFuelMap extends ActionBarActivity  implements LocationL
                     .position(new LatLng(location.getLatitude(), location.getLongitude()))
                     .title("Localizacao Atual"));
             markerSuaLocalizacao.showInfoWindow();
+            */
 
            // acharAbastecimento();
         }

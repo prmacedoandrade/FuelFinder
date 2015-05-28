@@ -48,13 +48,14 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
 
         Bundle b = getIntent().getExtras();
         placa = b.getString("placa");
+        updateUI();
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 TextView latitudeText = (TextView) view.findViewById(R.id.abastecimentoTextViewLatitude);
-                TextView longitudeText =(TextView) view.findViewById(R.id.abastecimentoTextViewLongitude);
+                TextView longitudeText = (TextView) view.findViewById(R.id.abastecimentoTextViewLongitude);
                 TextView precoText = (TextView) view.findViewById(R.id.abastecimentoTextViewPreco);
 
                 Intent intend = new Intent(AddFuelActivity.this, ActivityViewFuel.class);
@@ -71,7 +72,7 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
             }
         });
 
-        updateUI();
+
     }
 
     @Override

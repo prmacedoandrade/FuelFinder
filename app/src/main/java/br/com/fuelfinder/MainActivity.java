@@ -38,6 +38,7 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import br.com.fuelfinder.db.AbastecimentoDBHelper;
 import br.com.fuelfinder.db.FuelFinderContract;
 import br.com.fuelfinder.db.FuelFinderDBHelper;
 import br.com.fuelfinder.model.Veiculo;
@@ -291,12 +292,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
             db.execSQL(sql);
 
-            sql = String.format("DELETE FROM %s WHERE %s = '%s'",
-                    FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO,
-                    FuelFinderContract.Abastecimento.KEY_ID_VEICULO,
-                    placaDelete);
-
-            db.execSQL(sql);
+            apagarAbastecimentos(placaDelete);
 
             updateUI();
 
@@ -315,6 +311,20 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
             Toast.makeText(getApplicationContext(), "Erro ao apagar o veículo", Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
         }
+
+    }
+
+    public void apagarAbastecimentos(String placaDelete){
+
+        AbastecimentoDBHelper helper = new AbastecimentoDBHelper(MainActivity.this);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        String sql = String.format("DELETE FROM %s WHERE %s = '%s'",
+                FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO,
+                FuelFinderContract.Abastecimento.KEY_ID_VEICULO,
+                placaDelete);
+
+        db.execSQL(sql);
 
     }
 

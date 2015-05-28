@@ -99,11 +99,18 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
         mLoc = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
 
+        //REGISTRA PARA RECEBER ATUALIZACOES DE POSICIONAMENTO
+        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 10, 1, this);
+
+        // CASO NAO TENHA A LOCALIZACÃO CRIA UM MARKER TEMPORARIO NO LOCAL DA FA7
         if(mLoc!=null){
+            achouLocalizacao = true;
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLoc.getLatitude(), mLoc.getLongitude()), 16));
         }else{
 
-            achouLocalizacao = true;
+            latitudeAtual = -3.771026;
+            longitudeAtual =-38.483532;
+
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-3.771026,-38.483532), 16));
             marker = mMap.addMarker(new MarkerOptions()
                     .position((new LatLng(-3.771026,-38.483532)))
@@ -305,10 +312,12 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
             //txtLoc.setText(loc);
             mLoc = location;
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
-            mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(location.getLatitude(), location.getLongitude()))
-                    .title("Localização Atual"));
+            marker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+            latitudeAtual = location.getLatitude();
+            longitudeAtual = location.getLongitude();
 
+            marker.setTitle("Localização por GPS");
+            marker.showInfoWindow();
         }
 
     }
