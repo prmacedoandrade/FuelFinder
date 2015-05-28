@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.internal.ca;
 
 
 import org.ksoap2.SoapEnvelope;
@@ -53,9 +54,12 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         idUser = AccessToken.getCurrentAccessToken().getUserId();
+        //getApplicationContext().deleteDatabase("vehicles");
+        //getApplicationContext().deleteDatabase("abastecimentos");
         updateUI();
 
     }
@@ -272,20 +276,53 @@ public class MainActivity extends ActionBarActivity implements LocationListener 
 
     public void onDeleteButtonClick(View view) {
 
-        View v = (View) view.getParent();
-        TextView taskTextView = (TextView) v.findViewById(R.id.taskTextView);
-        String placa = taskTextView.getText().toString();
+        try{
+            View v = (View) view.getParent();
+            TextView taskTextView = (TextView) v.findViewById(R.id.taskTextView);
+            String placaDelete = taskTextView.getText().toString();
 
-        String sql = String.format("DELETE FROM %s WHERE %s = '%s'",
-                FuelFinderContract.Vehicle.TABLE_VEHICLE,
-                FuelFinderContract.Vehicle.KEY_LICENSE,
-                placa);
+            String sql = String.format("DELETE FROM %s WHERE %s = '%s'",
+                    FuelFinderContract.Vehicle.TABLE_VEHICLE,
+                    FuelFinderContract.Vehicle.KEY_LICENSE,
+                    placaDelete);
 
-        FuelFinderDBHelper helper = new FuelFinderDBHelper(MainActivity.this);
-        SQLiteDatabase db = helper.getWritableDatabase();
+            FuelFinderDBHelper helper = new FuelFinderDBHelper(MainActivity.this);
+            SQLiteDatabase db = helper.getWritableDatabase();
 
-        db.execSQL(sql);
-        updateUI();
+            db.execSQL(sql);
+
+            sql = String.format("DELETE FROM %s WHERE %s = '%s'",
+                    FuelFinderContract.Abastecimento.TABLE_ABASTECIMENTO,
+                    FuelFinderContract.Abastecimento.KEY_ID_VEICULO,
+                    placaDelete);
+
+            db.execSQL(sql);
+
+            updateUI();
+
+            if(isDataConnected()){
+
+                WebservicePersistence webservicePersistence = new WebservicePersistence();
+                webservicePersistence.setPlaca(placaDelete);
+                webservicePersistence.start();
+
+            }
+
+
+            Toast.makeText(getApplicationContext(), "Veículo apagado com sucesso", Toast.LENGTH_SHORT).show();
+
+        }catch (Exception ex){
+            Toast.makeText(getApplicationContext(), "Erro ao apagar o veículo", Toast.LENGTH_SHORT).show();
+            ex.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        startActivity(new Intent(MainActivity.this, MainActivity.class));
+        finish();
     }
 
     @Override

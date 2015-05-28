@@ -1,11 +1,17 @@
 package br.com.fuelfinder;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -26,11 +32,15 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
 
     private String placa;
     private ListAdapter listAdapter;
+    private LocationManager locationManager;
+    private boolean isGPSEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_fuel);
+
+        isGPSEnabled = false;
 
         ListView list = (ListView)findViewById(R.id.listAbastecimento);
         list.setClickable(true);
@@ -38,7 +48,7 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(), "TESTE", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "TESTE", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -49,6 +59,8 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
         updateUI();
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -58,27 +70,44 @@ public class AddFuelActivity extends ActionBarActivity implements LocationListen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_fuel) {
 
             Intent i = new Intent(AddFuelActivity.this, ActivityAddFuelMap.class);
-            i.putExtra("placa",placa);
+            i.putExtra("placa", placa);
             startActivity(i);
-            finish();
 
             return true;
         }
 
         if (id == R.id.action_find_fuel) {
-            return true;
+
+
+            locationManager =  (LocationManager) getSystemService(LOCATION_SERVICE);
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+            if(isGPSEnabled){
+                Intent i = new Intent(AddFuelActivity.this, ActivityFindFuelMap.class);
+                startActivity(i);
+
+                return true;
+            }else{
+                Toast.makeText(getApplicationContext(), "Por favor, ative a localização!", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        startActivity(new Intent(AddFuelActivity.this, MainActivity.class));
+        finish();
     }
 
     @Override

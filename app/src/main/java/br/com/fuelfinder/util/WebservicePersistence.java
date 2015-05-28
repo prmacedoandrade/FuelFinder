@@ -21,6 +21,8 @@ public class WebservicePersistence extends Thread {
 
     private Veiculo veiculo;
     private Abastecimento abastecimento;
+    private String placa;
+
 
     @Override
     public void run() {
@@ -104,6 +106,37 @@ public class WebservicePersistence extends Thread {
 
         }
 
+        if(placa != null){
+
+            SoapObject request = new SoapObject(Utils.NAMESPACE, Utils.METHOD_NAME_DELETE_CAR);
+
+            request.addProperty("placa",placa);
+
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.setOutputSoapObject(request);
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(Utils.URL);
+            try {
+                androidHttpTransport.call(Utils.SOAP_ACTION_DELETE_CAR, envelope);
+
+                //SoapPrimitive  resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+                // SoapPrimitive  resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+                SoapObject resultsRequestSOAP = (SoapObject) envelope.bodyIn;
+
+
+                // lblResult.setText(resultsRequestSOAP.toString());
+                // System.out.println("Response::"+resultsRequestSOAP.toString());
+
+            } catch (Exception e) {
+                //Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+                System.out.println("Error"+e);
+            }
+
+
+        }
+
+
+
     }
 
     public void persistVehicle(){
@@ -128,5 +161,13 @@ public class WebservicePersistence extends Thread {
 
     public void setAbastecimento(Abastecimento abastecimento) {
         this.abastecimento = abastecimento;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
     }
 }

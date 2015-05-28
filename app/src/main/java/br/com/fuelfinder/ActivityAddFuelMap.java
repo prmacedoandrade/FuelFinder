@@ -48,7 +48,7 @@ import br.com.fuelfinder.db.FuelFinderDBHelper;
 import br.com.fuelfinder.model.Abastecimento;
 import br.com.fuelfinder.util.WebservicePersistence;
 
-public class ActivityAddFuelMap extends ActionBarActivity implements LocationListener,ConnectionCallbacks, OnConnectionFailedListener {
+public class ActivityAddFuelMap extends ActionBarActivity implements LocationListener, ConnectionCallbacks, OnConnectionFailedListener {
 
     private Marker marker;
     private Location mLoc;
@@ -57,9 +57,11 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
     private String placa;
     private LocationManager locManager;
     private GoogleApiClient mGoogleApiClient;
+    private boolean achouLocalizacao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_add_fuel_map);
 
@@ -78,6 +80,9 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
         if(mLoc!=null){
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLoc.getLatitude(), mLoc.getLongitude()), 16));
         }else{
+
+            achouLocalizacao = true;
+
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-3.771026,-38.483532), 16));
             marker = mMap.addMarker(new MarkerOptions()
                     .position((new LatLng(-3.771026,-38.483532)))
@@ -89,8 +94,6 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
 
 
     public void onSaveGasButtonClick(View view) {
-
-
 
         //Toast.makeText(context, "Active Network Type : " + activeNetInfo.getTypeName(), Toast.LENGTH_SHORT).show();
 
@@ -183,7 +186,7 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
                     double precoDouble = Double.parseDouble(inputPrecoLitros.getText().toString());
                     double litrosDouble = (custoTotalDouble / precoDouble);
                     Double latitude = marker.getPosition().latitude;
-                    Double longitude = marker.getPosition().latitude;
+                    Double longitude = marker.getPosition().longitude;
 
                     values.clear();
                     values.put(FuelFinderContract.Abastecimento.KEY_ODOMETRO, odometro);
@@ -273,7 +276,9 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
     @Override
     public void onLocationChanged(Location location) {
 
-        if (location != null) {
+        if (location != null && !achouLocalizacao){
+
+            achouLocalizacao = true;
             String loc = "Lat:" + location.getLatitude() + "\n Long:"
                     + location.getLongitude();
             //txtLoc.setText(loc);
@@ -314,37 +319,6 @@ public class ActivityAddFuelMap extends ActionBarActivity implements LocationLis
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    class CurrencyTextWatcher implements TextWatcher {
-
-        boolean mEditing;
-
-        public CurrencyTextWatcher() {
-            mEditing = false;
-        }
-
-        public synchronized void afterTextChanged(Editable s) {
-            if(!mEditing) {
-                mEditing = true;
-
-                String digits = s.toString().replaceAll("\\D", "");
-                NumberFormat nf = NumberFormat.getCurrencyInstance();
-                try{
-                    String formatted = nf.format(Double.parseDouble(digits)/100);
-                    s.replace(0, s.length(), formatted);
-                } catch (NumberFormatException nfe) {
-                    s.clear();
-                }
-
-                mEditing = false;
-            }
-        }
-
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-        public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
     }
 
